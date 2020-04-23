@@ -6,12 +6,16 @@ import java.util.Arrays;
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
 
+    int size;
+
     void clear() {
-        Arrays.fill(storage, null);
+        Arrays.fill(storage, 0,size,null);
+        size = 0;
     }
 
     void save(Resume r) {
-        storage[size()] = r;
+        storage[size] = r;
+        size++;
     }
 
     Resume get(String uuid) {
@@ -24,13 +28,12 @@ public class ArrayStorage {
     void delete(String uuid) {
         for (int i = 0; i < size(); i++) {
             if (storage[i].uuid.equals(uuid)) {
-                if (size() - i >= 0) System.arraycopy(storage, i + 1, storage, i, size() - i);
+                if (size - 1 - i >= 0) System.arraycopy(storage, i + 1, storage, i, size - 1 - i);
+                size--;
                 break;
             }
         }
     }
-
-
 
     /**
      * @return array, contains only Resumes in storage (without null)
@@ -42,11 +45,6 @@ public class ArrayStorage {
     }
 
     int size() {
-        int size = 0;
-        for (Resume r : storage) {
-            if (r != null)
-                size++;
-        }
         return size;
     }
 }
