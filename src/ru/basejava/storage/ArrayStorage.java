@@ -13,53 +13,43 @@ public class ArrayStorage {
     private int size;
 
     public void clear() {
-        Arrays.fill(storage, 0,size,null);
+        Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
     public void save(Resume r) {
-        //каой размер size
         if (size == storage.length) {
             System.out.println("Storage full, cannot be saved");
-            return;}
-        if (!contains(r)) {
+            return;
+        }
+        if (getIndex(r.getUuid()) == -1) {
             storage[size] = r;
             size++;
-        } else System.out.println("Resume "+ r + " already exists");
+        } else System.out.println("Resume " + r + " already exists");
     }
 
     public void update(Resume r) {
-        if (contains(r)) {
-            for (int i = 0; i < size; i++) {
-                if (storage[i].getUuid().equals(r.getUuid())) {
-                    storage[i] = r;
-                }
-            }
+        int index = getIndex(r.getUuid());
+        if (index > -1) {
+            storage[index] = r;
         } else System.out.println("Resume " + r + " does`t exists");
     }
 
     public Resume get(String uuid) {
-        if (contains(uuid)) {
-            for (int i = 0; i < size(); i++) {
-                if (storage[i].getUuid().equals(uuid)) return storage[i];
-            }
-        }
-        System.out.println("Resume does`t exists");
+        int index = getIndex(uuid);
+        if (index > -1) {
+            return storage[index];
+        } else System.out.println("Resume does`t exists");
         return null;
     }
 
     public void delete(String uuid) {
-        if (contains(uuid)) {
-        for (int i = 0; i < size(); i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                if (size - 1 - i >= 0) System.arraycopy(storage, i + 1, storage, i, size - 1 - i);
-                size--;
-                break;
-            }
-        }}
-        else {
-            System.out.println("ru.basejava.model.Resume does`t exists");
-        }
+        int index = getIndex(uuid);
+        if (index > -1) {
+            if (size - 1 - index >= 0) System.arraycopy(storage, index + 1, storage, index, size - 1 - index);
+            size--;
+        } else
+            System.out.println("Resume does`t exists");
     }
 
     /**
@@ -75,11 +65,10 @@ public class ArrayStorage {
         return size;
     }
 
-     private boolean contains(Resume r){
-        return Arrays.asList(getAll()).contains(r);
-    }
-
-     private boolean contains(String uuid) {
-        return Arrays.stream(getAll()).anyMatch(x ->x.getUuid().equals(uuid));
+    private int getIndex(String uuid) {
+        for (int i = 0; i < size; i++) {
+            if (storage[i].getUuid().equals(uuid)) return i;
+        }
+        return -1;
     }
 }
