@@ -31,4 +31,22 @@ public class Resume {
         if (name != null) return uuid + " " + name;
         return uuid;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Resume resume = (Resume) o;
+
+        if (!uuid.equals(resume.uuid)) return false;
+        return name.equals(resume.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = uuid.hashCode();
+        result = 31 * result + name.hashCode();
+        return result;
+    }
 }

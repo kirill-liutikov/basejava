@@ -48,8 +48,8 @@ public class ArrayStorage {
         if (index > -1) {
             if (size - 1 - index >= 0) System.arraycopy(storage, index + 1, storage, index, size - 1 - index);
             size--;
-        } else
-            System.out.println("Resume does`t exists");
+        }
+        System.out.println("Resume does`t exists");
     }
 
     /**
