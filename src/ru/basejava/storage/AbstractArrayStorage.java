@@ -4,7 +4,7 @@ import ru.basejava.model.Resume;
 
 import java.util.Arrays;
 
-public abstract class AbstractArrayStorage implements Storage{
+public abstract class AbstractArrayStorage implements Storage {
 
     protected static final int STORAGE_LIMIT = 10000;
 
@@ -37,9 +37,10 @@ public abstract class AbstractArrayStorage implements Storage{
             return;
         }
         saveResume(r, index);
+        size++;
     }
 
-    protected abstract void  saveResume(Resume r, int index);
+    protected abstract void saveResume(Resume r, int index);
 
     public Resume get(String uuid) {
         int index = getIndex(uuid);
@@ -50,22 +51,24 @@ public abstract class AbstractArrayStorage implements Storage{
         return storage[index];
     }
 
-    @Override
     public void delete(String uuid) {
         int index = getIndex(uuid);
-        if (index > -1) {
-            if (size - 1 - index >= 0) System.arraycopy(storage, index + 1, storage, index, size - 1 - index);
+        if (index < 0) {
+            System.out.println("Resume " + uuid + " not exist");
+        } else {
+            deleteResume(index);
             size--;
         }
-        System.out.println("Resume does`t exists");
     }
+
+    protected abstract void deleteResume(int index);
 
     /**
      * @return array, contains only Resumes in storage (without null)
      */
     public Resume[] getAll() {
-        Resume[] allResumes = new Resume[size()];
-        if (size() >= 0) System.arraycopy(storage, 0, allResumes, 0, size());
+        Resume[] allResumes = new Resume[size];
+        System.arraycopy(storage, 0, allResumes, 0, size);
         return allResumes;
     }
 
