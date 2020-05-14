@@ -1,5 +1,8 @@
 package ru.basejava.storage;
 
+import ru.basejava.exception.ExistStorageException;
+import ru.basejava.exception.NotExistStorageException;
+import ru.basejava.exception.StorageException;
 import ru.basejava.model.Resume;
 
 import java.util.Arrays;
@@ -20,21 +23,17 @@ public abstract class AbstractArrayStorage implements Storage {
         int index = getIndex(r.getUuid());
         if (index > -1) {
             storage[index] = r;
-        } else System.out.println("Resume " + r + " does`t exists");
+        } else throw new NotExistStorageException(r.getUuid());
     }
 
     @Override
     public void save(Resume r) {
-        if (size == storage.length) {
-            System.out.println("Storage full, cannot be saved");
-            return;
-        }
-
         int index = getIndex(r.getUuid());
-
+        if (size == storage.length) {
+            throw new StorageException("Storage overflow", r.getUuid());
+        }
         if (index >= 0) {
-            System.out.println("Resume " + r + " already exists");
-            return;
+            throw new ExistStorageException(r.getUuid());
         }
         saveResume(r, index);
         size++;
@@ -44,9 +43,8 @@ public abstract class AbstractArrayStorage implements Storage {
 
     public Resume get(String uuid) {
         int index = getIndex(uuid);
-        if (index == -1) {
-            System.out.println("Resume " + uuid + " not exist");
-            return null;
+        if (index < 0) {
+            throw new NotExistStorageException(uuid);
         }
         return storage[index];
     }
@@ -54,7 +52,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public void delete(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
-            System.out.println("Resume " + uuid + " not exist");
+            throw new NotExistStorageException(uuid);
         } else {
             deleteResume(index);
             storage[size - 1] = null;
