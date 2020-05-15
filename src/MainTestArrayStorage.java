@@ -29,8 +29,6 @@ public class MainTestArrayStorage {
 //        System.out.println("Get dummy: " + ARRAY_STORAGE.get("dummy"));
         printAll();
 
-        r1.setName("John");
-        r2.setName("Bob");
         ARRAY_STORAGE.update(r1);
         ARRAY_STORAGE.update(r2);
         printAll();
