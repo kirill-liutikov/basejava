@@ -8,47 +8,40 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void update(Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index < 0) throw new NotExistStorageException(r.getUuid());
-        updateResume(index, r);
+        if (!isExist(r.getUuid())) throw new NotExistStorageException(r.getUuid());
+        updateResume(getKeyOrIndex(r.getUuid()), r);
     }
 
-    protected abstract void updateResume(int index, Resume r);
+    protected abstract void updateResume(Object index, Resume r);
 
-    @Override
-    public abstract void clear();
 
     @Override
     public void save(Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index > -1) throw new ExistStorageException(r.getUuid());
-        saveResume(index, r);
+        if (isExist(r.getUuid())) throw new ExistStorageException(r.getUuid());
+        saveResume(getKeyOrIndex(r.getUuid()), r);
     }
 
 
     @Override
     public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) throw new NotExistStorageException(uuid);
-        return getResume(index);
+        if (!isExist(uuid)) throw new NotExistStorageException(uuid);
+        return getResume(getKeyOrIndex(uuid));
     }
 
     @Override
     public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) throw new NotExistStorageException(uuid);
-        deleteResume(index);
+        if (!isExist(uuid)) throw new NotExistStorageException(uuid);
+        deleteResume(getKeyOrIndex(uuid));
     }
 
-    protected abstract void deleteResume(int index);
+    protected abstract void deleteResume(Object index);
 
+    protected abstract Object getKeyOrIndex(String uuid);
 
-    @Override
-    public abstract int size();
+    protected abstract void saveResume(Object index, Resume r);
 
-    protected abstract int getIndex(String uuid);
+    public abstract Resume getResume(Object index);
 
-    protected abstract void saveResume(int index, Resume r);
+    public abstract boolean isExist(String uuid);
 
-    public abstract Resume getResume(int index);
 }

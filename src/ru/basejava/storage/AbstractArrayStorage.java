@@ -20,16 +20,16 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void updateResume(int index, Resume r) {
-        storage[index] = r;
+    protected void updateResume(Object index, Resume r) {
+        storage[(int) index] = r;
     }
 
     @Override
-    public void saveResume(int index, Resume r) {
+    public void saveResume(Object index, Resume r) {
         if (size == storage.length) {
             throw new StorageException("Storage overflow", r.getUuid());
         }
-        saveResume(r, index);
+        saveResume(r, (int) index);
         size++;
     }
 
@@ -37,17 +37,19 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     public Resume get(String uuid) {
-        int index = getIndex(uuid);
+        int index = getKeyOrIndex(uuid);
         if (index < 0) {
             throw new NotExistStorageException(uuid);
         }
         return storage[index];
     }
 
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
+    @Override
+    public void deleteResume(Object uuid) {
+
+        int index = getKeyOrIndex(String.valueOf(uuid));
         if (index < 0) {
-            throw new NotExistStorageException(uuid);
+            throw new NotExistStorageException(String.valueOf(uuid));
         } else {
             deleteResume(index);
             storage[size - 1] = null;
@@ -70,10 +72,19 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return size;
     }
 
-    protected abstract int getIndex(String uuid);
 
     @Override
-    public Resume getResume(int index) {
-        return storage[index];
+    public Resume getResume(Object index) {
+        return storage[(int) index];
+    }
+
+
+    @Override
+    protected abstract Integer getKeyOrIndex(String uuid);
+
+    @Override
+    public boolean isExist(String uuid) {
+        int index = getKeyOrIndex(uuid);
+        return index >= 0;
     }
 }

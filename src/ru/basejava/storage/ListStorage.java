@@ -1,26 +1,26 @@
 package ru.basejava.storage;
 
 import ru.basejava.model.Resume;
-
 import java.util.ArrayList;
+import java.util.List;
 
 public class ListStorage extends AbstractStorage {
 
-    private ArrayList<Resume> storage = new ArrayList<Resume>();
+    private List<Resume> storage = new ArrayList<>();
 
     @Override
-    public void updateResume(int index, Resume r) {
-        storage.set(index, r);
+    public void updateResume(Object index, Resume r) {
+        storage.set((int) index, r);
     }
 
     @Override
-    public void deleteResume(int index) {
-        storage.remove(index);
+    public void deleteResume(Object index) {
+        storage.remove((int)index);
     }
 
     @Override
-    public Resume getResume(int index) {
-        return storage.get(index);
+    public Resume getResume(Object index) {
+        return storage.get((Integer) index);
     }
 
     @Override
@@ -36,12 +36,22 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void saveResume(int index, Resume r) {
+    protected void saveResume(Object index, Resume r) {
         storage.add(r);
     }
 
+
     @Override
-    protected int getIndex(String uuid) {
+    public boolean isExist(String uuid) {
+        for(Resume r : storage) {
+            if (r.getUuid().equals(uuid)) return true;
+        }
+        return false;
+        //return storage.stream().anyMatch(s-> s.getUuid().equals(uuid));
+    }
+
+    @Override
+    protected Object getKeyOrIndex(String uuid) {
         for (int i = 0; i < size() ; i++) {
             if(storage.get(i).getUuid().equals(uuid)) return i;
         }
