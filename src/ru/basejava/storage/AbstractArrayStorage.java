@@ -1,6 +1,5 @@
 package ru.basejava.storage;
 
-import ru.basejava.exception.NotExistStorageException;
 import ru.basejava.exception.StorageException;
 import ru.basejava.model.Resume;
 
@@ -33,30 +32,12 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         size++;
     }
 
-    protected abstract void saveResume(Resume r, int index);
-
     @Override
-    public Resume get(String uuid) {
-        int index = getSearchKey(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return storage[index];
-    }
-
-    @Override
-    public void deleteResume(Object uuid) {
-        int index = getSearchKey(String.valueOf(uuid));
-        if (index < 0) {
-            throw new NotExistStorageException(String.valueOf(uuid));
-        } else {
-            deleteResume(index);
+    public void deleteResume(Object searchKey) {
+            deleteResume((int)searchKey);
             storage[size - 1] = null;
             size--;
-        }
     }
-
-    protected abstract void deleteResume(int index);
 
     /**
      * @return array, contains only Resumes in storage (without null)
@@ -71,19 +52,22 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return size;
     }
 
-
     @Override
     public Resume getResume(Object index) {
         return storage[(int) index];
     }
 
+    @Override
+    public boolean isExist(Object index) {
+        return (Integer) index >= 0;
+    }
 
     @Override
     protected abstract Integer getSearchKey(String uuid);
 
-    @Override
-    public boolean isExist(String uuid) {
-        int index = getSearchKey(uuid);
-        return index >= 0;
-    }
+    protected abstract void saveResume(Resume r, int index);
+
+    protected abstract void deleteResume(int index);
+
+
 }

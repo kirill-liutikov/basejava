@@ -43,12 +43,8 @@ public class ListStorage extends AbstractStorage {
 
 
     @Override
-    public boolean isExist(String uuid) {
-        for (Resume r : storage) {
-            if (r.getUuid().equals(uuid)) return true;
-        }
-        return false;
-        //return storage.stream().anyMatch(s-> s.getUuid().equals(uuid));
+    public boolean isExist(Object searchKey) {
+       return searchKey != null;
     }
 
     @Override
@@ -56,7 +52,7 @@ public class ListStorage extends AbstractStorage {
         for (int i = 0; i < size(); i++) {
             if (storage.get(i).getUuid().equals(uuid)) return i;
         }
-        return -1;
+        return null;
     }
 
     @Override

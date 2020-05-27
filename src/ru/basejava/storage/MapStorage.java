@@ -24,7 +24,7 @@ public class MapStorage extends AbstractStorage {
         for (Map.Entry<String, Resume> entry : storage.entrySet()) {
             if (entry.getValue().getUuid().equals(uuid)) return entry.getKey();
         }
-        return -1;
+        return null;
     }
 
     @Override
@@ -59,11 +59,7 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    public boolean isExist(String uuid) {
-        for (String s : storage.keySet()) {
-            if (s.equals(uuid)) return true;
-        }
-        return false;
-        //return storage.keySet().stream().anyMatch(s -> s.equals(uuid));
+    public boolean isExist(Object searchKey) {
+        return searchKey != null;
     }
 }
