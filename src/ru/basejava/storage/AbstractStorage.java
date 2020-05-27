@@ -8,40 +8,46 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void update(Resume r) {
-        if (!isExist(r.getUuid())) throw new NotExistStorageException(r.getUuid());
-        updateResume(getKeyOrIndex(r.getUuid()), r);
+        updateResume(checkNotExist(r.getUuid()), r);
     }
 
-    protected abstract void updateResume(Object index, Resume r);
+    protected abstract void updateResume(Object searchKey, Resume r);
 
 
     @Override
     public void save(Resume r) {
-        if (isExist(r.getUuid())) throw new ExistStorageException(r.getUuid());
-        saveResume(getKeyOrIndex(r.getUuid()), r);
+        saveResume(checkExist(r.getUuid()), r);
     }
 
 
     @Override
     public Resume get(String uuid) {
-        if (!isExist(uuid)) throw new NotExistStorageException(uuid);
-        return getResume(getKeyOrIndex(uuid));
+        return getResume(checkNotExist(uuid));
     }
 
     @Override
     public void delete(String uuid) {
-        if (!isExist(uuid)) throw new NotExistStorageException(uuid);
-        deleteResume(getKeyOrIndex(uuid));
+        deleteResume(checkNotExist(uuid));
     }
 
-    protected abstract void deleteResume(Object index);
+    public Object checkNotExist(String uuid) {
+        if (!isExist(uuid)) throw new NotExistStorageException(uuid);
+        return getSearchKey(uuid);
+    }
 
-    protected abstract Object getKeyOrIndex(String uuid);
+    public Object checkExist(String uuid) {
+        if (isExist(uuid)) throw new ExistStorageException(uuid);
+        return getSearchKey(uuid);
+    }
 
-    protected abstract void saveResume(Object index, Resume r);
+    protected abstract void deleteResume(Object searchKey);
 
-    public abstract Resume getResume(Object index);
+    protected abstract Object getSearchKey(String uuid);
 
-    public abstract boolean isExist(String uuid);
+    protected abstract void saveResume(Object searchKey, Resume r);
+
+    protected abstract Resume getResume(Object searchKey);
+
+    protected abstract boolean isExist(String uuid);
 
 }

@@ -1,6 +1,7 @@
 package ru.basejava.storage;
 
 import ru.basejava.model.Resume;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     public void deleteResume(Object index) {
-        storage.remove((int)index);
+        storage.remove((int) index);
     }
 
     @Override
@@ -43,7 +44,7 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     public boolean isExist(String uuid) {
-        for(Resume r : storage) {
+        for (Resume r : storage) {
             if (r.getUuid().equals(uuid)) return true;
         }
         return false;
@@ -51,9 +52,9 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object getKeyOrIndex(String uuid) {
-        for (int i = 0; i < size() ; i++) {
-            if(storage.get(i).getUuid().equals(uuid)) return i;
+    protected Object getSearchKey(String uuid) {
+        for (int i = 0; i < size(); i++) {
+            if (storage.get(i).getUuid().equals(uuid)) return i;
         }
         return -1;
     }
