@@ -37,7 +37,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     public Resume get(String uuid) {
-        int index = getKeyOrIndex(uuid);
+        int index = getSearchKey(uuid);
         if (index < 0) {
             throw new NotExistStorageException(uuid);
         }
@@ -46,8 +46,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     public void deleteResume(Object uuid) {
-
-        int index = getKeyOrIndex(String.valueOf(uuid));
+        int index = getSearchKey(String.valueOf(uuid));
         if (index < 0) {
             throw new NotExistStorageException(String.valueOf(uuid));
         } else {
@@ -80,11 +79,11 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
 
     @Override
-    protected abstract Integer getKeyOrIndex(String uuid);
+    protected abstract Integer getSearchKey(String uuid);
 
     @Override
     public boolean isExist(String uuid) {
-        int index = getKeyOrIndex(uuid);
+        int index = getSearchKey(uuid);
         return index >= 0;
     }
 }
